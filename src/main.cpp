@@ -1,14 +1,17 @@
 #include <Geode/geode.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
+#include <windows.h>
+
+#define addr 0x20A23C
+#define onaddr "\xE9\x79\x06\x00\x00"
+#define offaddr "\x6A\x14\x8B\xCB\xFF"
 
 using namespace geode::prelude;
 
 class $modify(Test, PauseLayer)
 {
-
     bool buttonPressed = false;
-
     void onMySillyyBtn(CCObject * target)
     {
         // FLAlertLayer::create(
@@ -17,31 +20,23 @@ class $modify(Test, PauseLayer)
         //     "OK")
         //     ->show();
 
-        // Toggle the button
+        // If button is pressed set buttonPressed to true
+
         if (buttonPressed == false)
         {
-            buttonPressed = true;
-            auto label = CCLabelBMFont::create("Noclip Enabled", "bigFont.fnt");
-            label->setPosition(71, 272);
-            label->setScale(0.5);
-            label->setTag(1);
-            label->setVisible(buttonPressed);
-            this->addChild(label);
-            //  "opcodes": [
-            //         {"addr": "0x20A23C", "on": "E9 79 06 00 00", "off": "6A 14 8B CB FF"}
-            //     ],
-
-            
-
+            // If button is pressed set buttonPressed to true
+            bool buttonPressed = false;
+            // Write to memory
+            WriteProcessMemory(GetCurrentProcess(), (LPVOID)addr, onaddr, 5, 0);
         }
         else
         {
-            buttonPressed = false;
-            this->removeChildByTag(1);
-
+            // If button is pressed set buttonPressed to true
+            bool buttonPressed = false;
+            // Write to memory
+            WriteProcessMemory(GetCurrentProcess(), (LPVOID)addr, offaddr, 5, 0);
         }
     }
-
     void customSetup()
     {
         PauseLayer::customSetup();
@@ -55,6 +50,22 @@ class $modify(Test, PauseLayer)
         menu->setPosition(462, 212);
         menu->setScale(0.75);
         this->addChild(menu);
+
+        // If button is pressed show label
+        if (buttonPressed == true)
+        {
+
+            auto label = CCLabelBMFont::create("Noclip Enabled", "bigFont.fnt");
+            label->setPosition(71, 272);
+            label->setScale(0.5);
+            label->setTag(1);
+            label->setVisible(buttonPressed);
+            this->addChild(label);
+        }
+        else
+        {
+            this->removeChildByTag(1);
+        }
     }
 };
 
