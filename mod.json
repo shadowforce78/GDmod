@@ -5,5 +5,10 @@
 	"id": "saumondeluxe.test",
 	"name": "Test",
 	"developer": "SaumonDeLuxe",
-	"description": "A little test mod"
+	"description": "A little test mod",
+	"resources": {
+		"files": [
+			"./includes/*.hpp"
+		]
+	}
 }

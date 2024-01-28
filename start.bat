@@ -7,6 +7,14 @@ echo "Geometry Dash stopped!"
 echo "Starting build...."
 cmake --build build --config RelWithDebInfo
 echo "Build complete!"
+echo "Do you want to start Geometry Dash? (y/n)"
+set /p choice=
+if %choice% == y goto start
+if %choice% == n goto end
+:start
 echo "Starting Geometry Dash...."
 start steam://rungameid/322170
-echo "Geometry Dash started!"
+goto end
+:end
+echo "Press any key to exit..."
+pause >nul

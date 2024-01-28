@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(IMGUI_VERSION "v1.70")
+
 
 project(Test VERSION 1.0.0)
 
@@ -23,6 +25,15 @@ else()
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
+
+target_link_libraries(${PROJECT_NAME} imgui-cocos)
+
+# ImGui
+CPMAddPackage("gh:matcool/gd-imgui-cocos#4eb5777") # specify a commit!
+
+target_link_libraries(${PROJECT_NAME} imgui-cocos)
+
+
 
 # Set up dependencies, resources, link Geode
 setup_geode_mod(${PROJECT_NAME})

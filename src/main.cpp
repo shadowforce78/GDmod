@@ -2,72 +2,64 @@
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/PauseLayer.hpp>
 #include <windows.h>
-
-#define addr 0x20A23C
-#define onaddr "\xE9\x79\x06\x00\x00"
-#define offaddr "\x6A\x14\x8B\xCB\xFF"
+#include <imgui-cocos.hpp>
 
 using namespace geode::prelude;
 
-class $modify(Test, PauseLayer)
+// $on_mod(Loaded) {
+// When the mod is loaded, this code will be executed.
+// }
+bool menuImg = false;
+
+class $modify(Test, PauseLayer){
+
+    void onMySillyyBtn(CCObject * target){
+        return;
+}
+void customSetup()
 {
-    bool buttonPressed = false;
-    void onMySillyyBtn(CCObject * target)
+    PauseLayer::customSetup();
+    auto buttonSprite = CCSprite::createWithSpriteFrameName("GJ_stopEditorBtn_001.png");
+    auto button = CCMenuItemSpriteExtra::create(
+        buttonSprite, nullptr, this,
+        menu_selector(Test::onMySillyyBtn));
+
+    auto menu = CCMenu::create();
+    menu->addChild(button);
+    menu->setPosition(462, 212);
+    menu->setScale(0.75);
+    this->addChild(menu);
+
+    // If O key is pressed, toggle the menu
+    if (GetAsyncKeyState('o'))
     {
-        // FLAlertLayer::create(
-        //     "Geode",
-        //     "Hello World from my Custom Mod!",
-        //     "OK")
-        //     ->show();
-
-        // If button is pressed set buttonPressed to true
-
-        if (buttonPressed == false)
+        // Destroy the menu if it exists
+        if (menuImg == true)
         {
-            // If button is pressed set buttonPressed to true
-            bool buttonPressed = false;
-            // Write to memory
-            WriteProcessMemory(GetCurrentProcess(), (LPVOID)addr, onaddr, 5, 0);
+            ImGuiCocos::get().destroy();
+            menuImg = false;
         }
         else
         {
-            // If button is pressed set buttonPressed to true
-            bool buttonPressed = false;
-            // Write to memory
-            WriteProcessMemory(GetCurrentProcess(), (LPVOID)addr, offaddr, 5, 0);
-        }
-    }
-    void customSetup()
-    {
-        PauseLayer::customSetup();
-        auto buttonSprite = CCSprite::createWithSpriteFrameName("GJ_stopEditorBtn_001.png");
-        auto button = CCMenuItemSpriteExtra::create(
-            buttonSprite, nullptr, this,
-            menu_selector(Test::onMySillyyBtn));
+            ImGuiCocos::get().setup([]
+                                    {
+                                        menuImg = true;
+                                        // this runs after imgui has been setup,
+                                        // its a callback as imgui will be re initialized when toggling fullscreen,
+                                        // so use this to setup any themes and or fonts!
+                                    })
+                .draw([]
+                        {
+                        ImGui::Begin("Saumon's Mod");
 
-        auto menu = CCMenu::create();
-        menu->addChild(button);
-        menu->setPosition(462, 212);
-        menu->setScale(0.75);
-        this->addChild(menu);
+                        ImGui::Button("Awesome button");
 
-        // If button is pressed show label
-        if (buttonPressed == true)
-        {
-
-            auto label = CCLabelBMFont::create("Noclip Enabled", "bigFont.fnt");
-            label->setPosition(71, 272);
-            label->setScale(0.5);
-            label->setTag(1);
-            label->setVisible(buttonPressed);
-            this->addChild(label);
+                        ImGui::End(); });
         }
-        else
-        {
-            this->removeChildByTag(1);
-        }
-    }
-};
+    };
+}
+}
+;
 
 class $modify(MyAwesomeModification, MenuLayer){
 
