@@ -14,7 +14,20 @@ bool menuImg = false;
 class $modify(Test, PauseLayer){
 
     void onMySillyyBtn(CCObject * target){
-        return;
+        ImGuiCocos::get().setup([]
+                                {
+                                    menuImg = true;
+                                    // this runs after imgui has been setup,
+                                    // its a callback as imgui will be re initialized when toggling fullscreen,
+                                    // so use this to setup any themes and or fonts!
+                                })
+            .draw([]
+                    {
+                        ImGui::Begin("Saumon's Mod");
+
+                        ImGui::Button("Awesome button");
+
+                        ImGui::End(); });
 }
 void customSetup()
 {
@@ -29,34 +42,6 @@ void customSetup()
     menu->setPosition(462, 212);
     menu->setScale(0.75);
     this->addChild(menu);
-
-    // If O key is pressed, toggle the menu
-    if (GetAsyncKeyState('o'))
-    {
-        // Destroy the menu if it exists
-        if (menuImg == true)
-        {
-            ImGuiCocos::get().destroy();
-            menuImg = false;
-        }
-        else
-        {
-            ImGuiCocos::get().setup([]
-                                    {
-                                        menuImg = true;
-                                        // this runs after imgui has been setup,
-                                        // its a callback as imgui will be re initialized when toggling fullscreen,
-                                        // so use this to setup any themes and or fonts!
-                                    })
-                .draw([]
-                        {
-                        ImGui::Begin("Saumon's Mod");
-
-                        ImGui::Button("Awesome button");
-
-                        ImGui::End(); });
-        }
-    };
 }
 }
 ;
